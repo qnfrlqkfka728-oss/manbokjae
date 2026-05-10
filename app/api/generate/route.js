@@ -1,8 +1,6 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { calculateSaju } from '@/lib/saju_engine';
 import { buildPrompt, SYSTEM_PROMPT } from '@/lib/saju_data';
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function POST(request) {
   try {
@@ -21,13 +19,13 @@ export async function POST(request) {
     const prompt = buildPrompt(chapter, sajuData);
     const fullPrompt = SYSTEM_PROMPT + '\n\n' + prompt;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents: fullPrompt,
-    });
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(fullPrompt);
+    const text = result.response.text();
 
     return Response.json({
-      content: response.text,
+      content: text,
       sajuData: {
         pillars: sajuData.pillars,
         ilju: sajuData.ilju,
