@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from '@google/genai';
 import { calculateSaju } from '@/lib/saju_engine';
 import { buildPrompt, SYSTEM_PROMPT } from '@/lib/saju_data';
 
@@ -6,10 +6,6 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const { year, month, day, hour, gender, chapter } = body;
-
-    if (!year || !month || !day || !gender || !chapter) {
-      return Response.json({ error: '필수 값 누락' }, { status: 400 });
-    }
 
     const sajuData = calculateSaju(
       parseInt(year), parseInt(month), parseInt(day),
@@ -19,13 +15,17 @@ export async function POST(request) {
     const prompt = buildPrompt(chapter, sajuData);
     const fullPrompt = SYSTEM_PROMPT + '\n\n' + prompt;
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(fullPrompt);
-    const text = result.response.text();
+    const apiKey = process.env.GEMINI_API_KEY;
+    console.log('API Key exists:', !!apiKey);
+
+    const ai = new GoogleGenAI({ apiKey });
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.0-flash',
+      contents: fullPrompt,
+    });
 
     return Response.json({
-      content: text,
+      content: response.text,
       sajuData: {
         pillars: sajuData.pillars,
         ilju: sajuData.ilju,
@@ -35,7 +35,7 @@ export async function POST(request) {
     });
 
   } catch (error) {
-    console.error('Generate error:', error);
+    console.error('Generate error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 }
