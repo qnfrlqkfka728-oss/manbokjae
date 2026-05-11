@@ -23,7 +23,7 @@ export default function Home() {
 
       <section style={{ position:'relative', zIndex:10, display:'flex', flexDirection:'column', alignItems:'center', padding:'80px 24px 60px', textAlign:'center', opacity:visible?1:0, transform:visible?'translateY(0)':'translateY(20px)', transition:'all 0.8s ease' }}>
         <div style={{ width:'160px', height:'160px', borderRadius:'50%', border:'2px solid rgba(201,168,76,0.4)', background:'radial-gradient(circle, rgba(201,168,76,0.15), rgba(10,7,5,0.9))', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'72px', marginBottom:'36px', boxShadow:'0 0 60px rgba(201,168,76,0.15)', position:'relative' }}>
-          🧙
+          <img src="/manbokjae.png" alt="만복 선생" style={{ width:'100%', height:'100%', objectFit:'cover', borderRadius:'50%' }} />
           <div style={{ position:'absolute', bottom:'-8px', background:'#c9a84c', color:'#0a0705', fontSize:'11px', fontWeight:'700', padding:'3px 14px', borderRadius:'20px' }}>만복 선생</div>
         </div>
 
